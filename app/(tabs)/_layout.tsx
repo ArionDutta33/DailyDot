@@ -1,3 +1,4 @@
+import { AntDesign, Ionicons, SimpleLineIcons } from '@expo/vector-icons';
 import { Link, Tabs } from 'expo-router';
 
 import { HeaderButton } from '../../components/HeaderButton';
@@ -42,10 +43,24 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="Search"
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon size={18} name="search" color={color} />,
+          title: 'Search',
+          tabBarIcon: ({ color }) => <SimpleLineIcons size={18} name="magnifier" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="Upcoming"
+        options={{
+          title: 'Upcoming',
+          tabBarIcon: ({ color }) => <AntDesign size={18} name="clockcircleo" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="Browse"
+        options={{
+          title: 'Browse',
+          tabBarIcon: ({ color }) => <Ionicons size={18} name="menu-outline" color={color} />,
         }}
       />
     </Tabs>
