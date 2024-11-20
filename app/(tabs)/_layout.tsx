@@ -21,7 +21,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
+          title: 'Today',
+
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: 'rgb(39, 38, 38)',
