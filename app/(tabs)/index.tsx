@@ -1,22 +1,15 @@
 import { Stack } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import React from 'react';
+import { View, Text } from 'react-native';
 
-import { ScreenContent } from '~/components/ScreenContent';
-
-export default function Home() {
+const Home = () => {
   return (
     <>
-      <Stack.Screen options={{ title: 'Tab One' }} />
-      <View style={styles.container}>
-        <ScreenContent path="app/(tabs)/index.tsx" title="Tab One" />
+      <View className="flex-1 bg-[rgb(39,38,38)]">
+        <Text className="text-">Home</Text>
       </View>
     </>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-  },
-});
+export default Home;

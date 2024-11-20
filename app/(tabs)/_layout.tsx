@@ -7,12 +7,25 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: 'black',
+        tabBarActiveTintColor: 'white',
+        headerShadowVisible: false,
+        tabBarInactiveTintColor: 'white',
+        tabBarActiveBackgroundColor: 'crimson',
+        animation: 'fade',
+        lazy: true,
+
+        tabBarStyle: {
+          backgroundColor: 'rgb(29,29,29)',
+        },
       }}>
       <Tabs.Screen
         name="index"
         options={{
           title: 'Tab One',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: 'rgb(39, 38, 38)',
+          },
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
