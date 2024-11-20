@@ -1,10 +1,16 @@
 import { AntDesign, Ionicons, SimpleLineIcons } from '@expo/vector-icons';
-import { Link, Tabs } from 'expo-router';
+import { Link, Redirect, Tabs } from 'expo-router';
 
 import { HeaderButton } from '../../components/HeaderButton';
 import { TabBarIcon } from '../../components/TabBarIcon';
 
+import { useAuth } from '~/provider/AuthProvider';
+
 export default function TabLayout() {
+  const { isAuthenticated } = useAuth();
+  if (!isAuthenticated) {
+    return <Redirect href="/(auth)/login" />;
+  }
   return (
     <Tabs
       screenOptions={{

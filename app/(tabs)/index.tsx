@@ -5,6 +5,7 @@ import { FloatingAction } from 'react-native-floating-action';
 
 import { tasks } from '~/assets/data/tasks';
 import TaskItemBox from '~/components/customComponents/taskBox';
+import { useAuth } from '~/provider/AuthProvider';
 const Home = () => {
   return (
     <>
@@ -16,6 +17,7 @@ const Home = () => {
         </View>
 
         <FlatList
+          showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item.id}
           data={tasks}
           renderItem={({ item }) => <TaskItemBox task={item} />}
