@@ -8,7 +8,12 @@ import { TaskType } from '~/assets/data/tasks';
 const TaskItemBox = ({ task }: { task: TaskType }) => {
   return (
     <View className="flex-row items-center gap-3 border-b border-gray-500 py-6  ">
-      <Checkbox onChange={() => {}} value style={{ borderRadius: '100%' }} />
+      <Checkbox
+        color="rgb(99, 170, 242)"
+        onChange={() => {}}
+        value={false}
+        style={{ borderRadius: '100%' }}
+      />
       <View>
         <Text className="text-xl  text-white">{task.title}</Text>
         <View>

@@ -5,7 +5,6 @@ import { FloatingAction } from 'react-native-floating-action';
 
 import { tasks } from '~/assets/data/tasks';
 import TaskItemBox from '~/components/customComponents/taskBox';
-import { useAuth } from '~/provider/AuthProvider';
 const Home = () => {
   return (
     <>
