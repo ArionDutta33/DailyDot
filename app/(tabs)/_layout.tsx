@@ -13,8 +13,12 @@ export default function TabLayout() {
         tabBarActiveBackgroundColor: 'crimson',
         animation: 'fade',
         lazy: true,
+        tabBarBadge: '2',
+
+        tabBarIconStyle: {},
 
         tabBarStyle: {
+          padding: 10,
           backgroundColor: 'rgb(29,29,29)',
         },
       }}>
@@ -22,12 +26,14 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Today',
-
+          headerTitleStyle: {
+            fontWeight: 'light',
+          },
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: 'rgb(39, 38, 38)',
           },
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon size={18} name="calendar" color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
               <HeaderButton />
@@ -39,7 +45,7 @@ export default function TabLayout() {
         name="two"
         options={{
           title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon size={18} name="search" color={color} />,
         }}
       />
     </Tabs>
