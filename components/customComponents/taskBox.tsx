@@ -13,7 +13,7 @@ const TaskItemBox = ({ task }: { task: TaskType }) => {
         <Text className="text-xl  text-white">{task.title}</Text>
         <View>
           <SimpleLineIcons name="link" className="py-1" size={10} color="white" />
-          <Text className="py-1 text-gray-400">{task.description}</Text>
+          <Text className="py-1  text-zinc-300">{task.description}</Text>
           <Text className="text-white">1/4</Text>
         </View>
       </View>
