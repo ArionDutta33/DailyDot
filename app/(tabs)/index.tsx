@@ -1,11 +1,9 @@
-import Checkbox from 'expo-checkbox';
-import { Stack } from 'expo-router';
 import moment from 'moment';
 import React from 'react';
-import { View, Text, FlatList, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { View, Text, FlatList } from 'react-native';
 import { FloatingAction } from 'react-native-floating-action';
 
-import { tasks, TaskType } from '~/assets/data/tasks';
+import { tasks } from '~/assets/data/tasks';
 import TaskItemBox from '~/components/customComponents/taskBox';
 const Home = () => {
   return (
