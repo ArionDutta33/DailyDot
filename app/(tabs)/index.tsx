@@ -19,6 +19,7 @@ import {
   Alert,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import { FloatingAction } from 'react-native-floating-action';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -26,6 +27,7 @@ import { Toast } from 'react-native-toast-notifications';
 
 import { tasks } from '~/assets/data/tasks';
 import TaskItemBox from '~/components/customComponents/taskBox';
+import useTodos from '~/hooks/useTodos';
 import { useAuth } from '~/provider/AuthProvider';
 import { supabase } from '~/utils/supabase';
 const Home = () => {
@@ -69,6 +71,11 @@ const Home = () => {
     bottomSheetModalRef.current?.close();
   };
 
+  //*fetch the notes from custom hook
+  const { todos, loading, error } = useTodos();
+  //*console.log the data
+  console.log('from the index page', JSON.stringify(todos, null, 2));
+
   // callbacks
   const handleSheetClose = useCallback(() => {
     bottomSheetModalRef.current?.close();
@@ -84,6 +91,9 @@ const Home = () => {
   const handleDatePress = useCallback(() => {
     setShow(true); // Show the DateTimePicker when the button is pressed
   }, []);
+  if (loading) {
+    return <ActivityIndicator size="large" animating color="crimson" />;
+  }
   return (
     <>
       <GestureHandlerRootView>
