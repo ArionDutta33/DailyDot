@@ -3,9 +3,8 @@ import Checkbox from 'expo-checkbox';
 import React, { useState } from 'react';
 import { View, Text } from 'react-native';
 
-import { TaskType } from '~/assets/data/tasks';
-
-const TaskItemBox = ({ task }: { task: TaskType }) => {
+import { TodoTypes } from '~/types/todos';
+const TaskItemBox = ({ todos }: { todos: TodoTypes }) => {
   return (
     <View className="flex-row items-center gap-3 border-b border-gray-500 py-6  ">
       <Checkbox
@@ -15,10 +14,10 @@ const TaskItemBox = ({ task }: { task: TaskType }) => {
         style={{ borderRadius: '100%' }}
       />
       <View>
-        <Text className="text-xl  text-white">{task.title}</Text>
+        <Text className="text-xl  text-white">{todos.title}</Text>
         <View>
           <SimpleLineIcons name="link" className="py-1" size={10} color="white" />
-          <Text className="py-1  text-[#ddd]">{task.description}</Text>
+          <Text className="py-1  text-[#ddd]">{todos.description}</Text>
           <Text className="text-white">1/4</Text>
         </View>
       </View>

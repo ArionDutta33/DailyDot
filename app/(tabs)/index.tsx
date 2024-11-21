@@ -73,8 +73,6 @@ const Home = () => {
 
   //*fetch the notes from custom hook
   const { todos, loading, error } = useTodos();
-  //*console.log the data
-  console.log('from the index page', JSON.stringify(todos, null, 2));
 
   // callbacks
   const handleSheetClose = useCallback(() => {
@@ -107,8 +105,8 @@ const Home = () => {
           <FlatList
             showsVerticalScrollIndicator={false}
             keyExtractor={(item) => item.id}
-            data={tasks}
-            renderItem={({ item }) => <TaskItemBox task={item} />}
+            data={todos}
+            renderItem={({ item }) => <TaskItemBox todos={item} />}
           />
           <FloatingAction
             onClose={handleSheetClose}
