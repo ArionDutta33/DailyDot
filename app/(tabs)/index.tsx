@@ -5,6 +5,7 @@ import BottomSheet, {
   BottomSheetModalProvider,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import React, { useCallback, useRef, useMemo, useState } from 'react';
 import {
@@ -16,6 +17,7 @@ import {
   TextInput,
   ScrollView,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
 import { FloatingAction } from 'react-native-floating-action';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -28,6 +30,8 @@ const Home = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false); // Add this state to control the visibility of the DateTimePicker
 
   const { user } = useAuth();
 
@@ -36,11 +40,7 @@ const Home = () => {
     if (title === '' || description === '') {
       return;
     }
-
-    const { data, error } = await supabase
-      .from('todos')
-      .insert([{ title, description, user_id: user?.id }])
-      .select();
+    console.log(title, description, new Date(date).toDateString());
   };
 
   // callbacks
@@ -52,6 +52,11 @@ const Home = () => {
   }, []);
   const handleSheetChanges = useCallback((index: number) => {
     console.log('handleSheetChanges', index);
+  }, []);
+
+  //handle the date picker
+  const handleDatePress = useCallback(() => {
+    setShow(true); // Show the DateTimePicker when the button is pressed
   }, []);
   return (
     <>
@@ -113,7 +118,23 @@ const Home = () => {
                 placeholderTextColor="#ddd"
                 placeholder="Description"
               />
-              <View className=" ">
+              <View className="flex-row ">
+                <TouchableOpacity onPress={handleDatePress}>
+                  <Text className="mx-6 my-4 self-end rounded-xl border bg-[crimson] p-3 px-5 text-white">
+                    Due on {moment(date).format(` MMMM D , dddd`)}
+                  </Text>
+                </TouchableOpacity>
+                {show && (
+                  <DateTimePicker
+                    value={date}
+                    mode="date"
+                    display="default"
+                    onChange={(event, selectedDate) => {
+                      setDate(selectedDate || date);
+                      setShow(false);
+                    }}
+                  />
+                )}
                 <Ionicons
                   onPress={handleOnSubmit}
                   className={` mx-6 my-4 self-end rounded-xl border bg-[crimson] p-3 px-5`}
