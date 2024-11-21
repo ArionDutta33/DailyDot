@@ -73,6 +73,8 @@ const Home = () => {
               <TextInput
                 value={title}
                 onChangeText={setTitle}
+                multiline={false}
+                numberOfLines={1}
                 className="px-6   text-2xl tracking-widest  text-white"
                 placeholderTextColor="#ddd"
                 placeholder="Task name"
@@ -81,7 +83,8 @@ const Home = () => {
                 value={description}
                 onChangeText={setDescription}
                 multiline={false}
-                className="border-white  px-6 text-lg tracking-widest  text-white"
+                numberOfLines={1}
+                className="border border-white  px-6 text-lg tracking-widest  text-white"
                 placeholderTextColor="#ddd"
                 placeholder="Description"
               />
@@ -90,7 +93,7 @@ const Home = () => {
                   onPress={() => {
                     console.log('Email:', title, '\n description', description);
                   }}
-                  className={` mx-6 my-4  self-end rounded-xl border bg-[crimson] p-3 px-5`}
+                  className={` mx-6 my-4 self-end rounded-xl border bg-[crimson] p-3 px-5`}
                   name="send"
                   size={24}
                   color="white"
