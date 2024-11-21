@@ -27,32 +27,41 @@ const Home = () => {
   }, []);
   return (
     <>
-      <View className="flex-1 bg-[rgb(39,38,38)] px-4">
-        <View className="border-b border-gray-500 py-1">
-          <Text className="py-2 text-xl font-medium text-white">
-            {moment().format(` MMMM D , dddd`)}
-          </Text>
+      <GestureHandlerRootView>
+        <View className="flex-1 bg-[rgb(39,38,38)] px-4">
+          <View className="border-b border-gray-500 py-1">
+            <Text className="py-2 text-xl font-medium text-white">
+              {moment().format(` MMMM D , dddd`)}
+            </Text>
+          </View>
+
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item) => item.id}
+            data={tasks}
+            renderItem={({ item }) => <TaskItemBox task={item} />}
+          />
+          <FloatingAction
+            onClose={handleSheetClose}
+            onOpen={handlePresentModalPress}
+            color="crimson"
+            animated
+          />
         </View>
 
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
-          data={tasks}
-          renderItem={({ item }) => <TaskItemBox task={item} />}
-        />
-        <FloatingAction
-          onClose={handleSheetClose}
-          onOpen={handlePresentModalPress}
-          color="crimson"
-          animated
-        />
-      </View>
-      <GestureHandlerRootView>
         <BottomSheetModalProvider>
           {/* <Button onPress={handlePresentModalPress} title="Present Modal" color="black" /> */}
           <BottomSheetModal
+            backgroundStyle={{ backgroundColor: 'rgb(39,38,38)' }}
+            animateOnMount
+            animationConfigs={{
+              duration: 200,
+              overshootClamping: true,
+              restDisplacementThreshold: 0.1,
+              restSpeedThreshold: 0.1,
+            }}
             onDismiss={() => {}}
-            snapPoints={['90%']}
+            snapPoints={['50%']}
             ref={bottomSheetModalRef}
             onChange={handleSheetChanges}>
             <BottomSheetView>
@@ -66,13 +75,3 @@ const Home = () => {
 };
 
 export default Home;
-const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-    // padding: 24,
-  },
-  contentContainer: {
-    // flex: 1,
-    // alignItems: 'center',
-  },
-});
