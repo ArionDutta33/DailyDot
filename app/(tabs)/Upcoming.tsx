@@ -7,7 +7,7 @@ const Upcoming = () => {
   return (
     <>
       <View>
-        <Text>Upcoming</Text>
+        <Text>Check</Text>
       </View>
     </>
   );
