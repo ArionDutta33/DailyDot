@@ -7,7 +7,16 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet';
 import moment from 'moment';
 import React, { useCallback, useRef, useMemo, useState } from 'react';
-import { View, Text, FlatList, Button, StyleSheet, TextInput, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  Button,
+  StyleSheet,
+  TextInput,
+  ScrollView,
+  Alert,
+} from 'react-native';
 import { FloatingAction } from 'react-native-floating-action';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -17,6 +26,14 @@ const Home = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  //*handle submit
+  const handleOnSubmit = async () => {
+    if (title === '' || description === '') {
+      return;
+    }
+    console.log(title, description);
+  };
 
   // callbacks
   const handleSheetClose = useCallback(() => {
@@ -84,15 +101,13 @@ const Home = () => {
                 onChangeText={setDescription}
                 multiline={false}
                 numberOfLines={1}
-                className="border border-white  px-6 text-lg tracking-widest  text-white"
+                className="  px-6 text-lg tracking-widest  text-white"
                 placeholderTextColor="#ddd"
                 placeholder="Description"
               />
               <View className=" ">
                 <Ionicons
-                  onPress={() => {
-                    console.log('Email:', title, '\n description', description);
-                  }}
+                  onPress={handleOnSubmit}
                   className={` mx-6 my-4 self-end rounded-xl border bg-[crimson] p-3 px-5`}
                   name="send"
                   size={24}
