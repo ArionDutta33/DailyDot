@@ -22,17 +22,25 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { tasks } from '~/assets/data/tasks';
 import TaskItemBox from '~/components/customComponents/taskBox';
+import { useAuth } from '~/provider/AuthProvider';
+import { supabase } from '~/utils/supabase';
 const Home = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  const { user } = useAuth();
 
   //*handle submit
   const handleOnSubmit = async () => {
     if (title === '' || description === '') {
       return;
     }
-    console.log(title, description);
+
+    const { data, error } = await supabase
+      .from('todos')
+      .insert([{ title, description, user_id: user?.id }])
+      .select();
   };
 
   // callbacks
