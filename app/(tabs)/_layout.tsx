@@ -42,7 +42,7 @@ export default function TabLayout() {
           },
           tabBarIcon: ({ color }) => <TabBarIcon size={18} name="calendar" color={color} />,
           headerRight: () => (
-            <Link href="/modal" asChild>
+            <Link href="/profile" asChild>
               <HeaderButton />
             </Link>
           ),
