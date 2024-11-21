@@ -1,36 +1,77 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
-import BottomSheet from 'react-native-simple-bottom-sheet';
+import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
+import React, { useCallback, useRef, useMemo } from 'react';
+import { StyleSheet, View, Text, Button } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 const Search = () => {
-  return (
-    <>
-      <Tabs.Screen options={{ animation: 'fade' }} />
-      <View style={{ flex: 1 }}>
-        <View>Your content</View>
-        <BottomSheet isOpen>
-          <ScrollView>
-            <Text>check</Text>
-            <Text>check</Text>
-            <Text>check</Text>
-            <Text>check</Text>
-            <Text>check</Text>
-            <Text>check</Text>
-            <Text>check</Text>
-            <Text>check</Text>
-            <Text>check</Text>
-            <Text>check</Text>
-            <Text>check</Text>
-            <Text>check</Text>
-            <Text>check</Text>
-            <Text>check</Text>
-            <Text>check</Text>
-            <Text>check</Text>
-          </ScrollView>
-        </BottomSheet>
+  // hooks
+  const sheetRef = useRef<BottomSheet>(null);
+
+  // variables
+  const data = useMemo(
+    () =>
+      Array(50)
+        .fill(0)
+        .map((_, index) => `index-${index}`),
+    []
+  );
+  const snapPoints = useMemo(() => ['25%', '50%', '90%'], []);
+
+  // callbacks
+  const handleSheetChange = useCallback((index) => {
+    console.log('handleSheetChange', index);
+  }, []);
+  const handleSnapPress = useCallback((index) => {
+    sheetRef.current?.snapToIndex(index);
+  }, []);
+  const handleClosePress = useCallback(() => {
+    sheetRef.current?.close();
+  }, []);
+
+  // render
+  const renderItem = useCallback(
+    ({ item }) => (
+      <View style={styles.itemContainer}>
+        <Text>{item}</Text>
       </View>
-    </>
+    ),
+    []
+  );
+  return (
+    <GestureHandlerRootView style={styles.container}>
+      <Button title="Snap To 90%" onPress={() => handleSnapPress(2)} />
+      <Button title="Snap To 50%" onPress={() => handleSnapPress(1)} />
+      <Button title="Snap To 25%" onPress={() => handleSnapPress(0)} />
+      <Button title="Close" onPress={() => handleClosePress()} />
+      <BottomSheet
+        ref={sheetRef}
+        snapPoints={snapPoints}
+        enableDynamicSizing={false}
+        onChange={handleSheetChange}>
+        <BottomSheetFlatList
+          data={data}
+          keyExtractor={(i) => i}
+          renderItem={renderItem}
+          contentContainerStyle={styles.contentContainer}
+        />
+      </BottomSheet>
+    </GestureHandlerRootView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 200,
+  },
+  contentContainer: {
+    backgroundColor: 'white',
+  },
+  itemContainer: {
+    padding: 6,
+    margin: 6,
+    backgroundColor: '#eee',
+  },
+});
 
 export default Search;

@@ -1,11 +1,30 @@
+import BottomSheet, {
+  BottomSheetFlatList,
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet';
 import moment from 'moment';
-import React from 'react';
-import { View, Text, FlatList } from 'react-native';
+import React, { useCallback, useRef, useMemo, useState } from 'react';
+import { View, Text, FlatList, Button, StyleSheet } from 'react-native';
 import { FloatingAction } from 'react-native-floating-action';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { tasks } from '~/assets/data/tasks';
 import TaskItemBox from '~/components/customComponents/taskBox';
 const Home = () => {
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  // callbacks
+  const handleSheetClose = useCallback(() => {
+    bottomSheetModalRef.current?.close();
+  });
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+  }, []);
   return (
     <>
       <View className="flex-1 bg-[rgb(39,38,38)] px-4">
@@ -21,10 +40,39 @@ const Home = () => {
           data={tasks}
           renderItem={({ item }) => <TaskItemBox task={item} />}
         />
-        <FloatingAction color="crimson" animated />
+        <FloatingAction
+          onClose={handleSheetClose}
+          onOpen={handlePresentModalPress}
+          color="crimson"
+          animated
+        />
       </View>
+      <GestureHandlerRootView>
+        <BottomSheetModalProvider>
+          {/* <Button onPress={handlePresentModalPress} title="Present Modal" color="black" /> */}
+          <BottomSheetModal
+            onDismiss={() => {}}
+            snapPoints={['90%']}
+            ref={bottomSheetModalRef}
+            onChange={handleSheetChanges}>
+            <BottomSheetView>
+              <Text>Awesome 🎉</Text>
+            </BottomSheetView>
+          </BottomSheetModal>
+        </BottomSheetModalProvider>
+      </GestureHandlerRootView>
     </>
   );
 };
 
 export default Home;
+const styles = StyleSheet.create({
+  container: {
+    // flex: 1,
+    // padding: 24,
+  },
+  contentContainer: {
+    // flex: 1,
+    // alignItems: 'center',
+  },
+});
