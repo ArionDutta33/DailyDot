@@ -21,35 +21,65 @@ import {
 } from 'react-native';
 import { FloatingAction } from 'react-native-floating-action';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Toast } from 'react-native-toast-notifications';
 
 import { tasks } from '~/assets/data/tasks';
 import TaskItemBox from '~/components/customComponents/taskBox';
 import { useAuth } from '~/provider/AuthProvider';
 import { supabase } from '~/utils/supabase';
+
 const Home = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const [date, setDate] = useState(new Date());
-  const [show, setShow] = useState(false); // Add this state to control the visibility of the DateTimePicker
+  const [show, setShow] = useState(false); // Controls visibility of DateTimePicker
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false); // Manages modal open state
 
   const { user } = useAuth();
 
   //*handle submit
   const handleOnSubmit = async () => {
-    if (title === '' || description === '') {
-      return;
+    try {
+      if (title === '' || description === '') {
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('todos')
+        .insert([{ title, description, user_id: user?.id, due_date: date }])
+        .select();
+      console.log(JSON.stringify(data, null, 2));
+      Toast.show('Task added successfully!', {
+        type: 'success',
+        placement: 'bottom',
+        duration: 2000,
+      });
+      setTitle('');
+      setDescription('');
+    } catch (error) {
+      console.log(JSON.stringify(error, null, 2));
+      Toast.show('Something went wrong', {
+        type: 'error',
+        placement: 'bottom',
+        duration: 2000,
+      });
     }
-    console.log(title, description, new Date(date).toDateString());
+    setIsBottomSheetOpen(false);
+    bottomSheetModalRef.current?.close();
   };
 
   // callbacks
   const handleSheetClose = useCallback(() => {
+    setIsBottomSheetOpen(false);
     bottomSheetModalRef.current?.close();
-  });
+  }, []);
+
   const handlePresentModalPress = useCallback(() => {
+    setIsBottomSheetOpen(true);
     bottomSheetModalRef.current?.present();
   }, []);
+
   const handleSheetChanges = useCallback((index: number) => {
     console.log('handleSheetChanges', index);
   }, []);
@@ -58,6 +88,7 @@ const Home = () => {
   const handleDatePress = useCallback(() => {
     setShow(true); // Show the DateTimePicker when the button is pressed
   }, []);
+
   return (
     <>
       <GestureHandlerRootView>
@@ -83,9 +114,7 @@ const Home = () => {
         </View>
 
         <BottomSheetModalProvider>
-          {/* <Button onPress={handlePresentModalPress} title="Present Modal" color="black" /> */}
           <BottomSheetModal
-            enablePanDownToClose={false}
             enableHandlePanningGesture={false} // Disable handle dragging
             backgroundStyle={{ backgroundColor: 'rgb(39,38,38)' }}
             animateOnMount
@@ -95,11 +124,11 @@ const Home = () => {
               restDisplacementThreshold: 0.1,
               restSpeedThreshold: 0.1,
             }}
-            onDismiss={() => {}}
+            onDismiss={handleSheetClose} // Ensure state updates when dismissed
             snapPoints={['30%']}
             ref={bottomSheetModalRef}
             onChange={handleSheetChanges}>
-            <BottomSheetView className="">
+            <BottomSheetView>
               <TextInput
                 value={title}
                 onChangeText={setTitle}
@@ -131,7 +160,7 @@ const Home = () => {
                     display="default"
                     onChange={(event, selectedDate) => {
                       setDate(selectedDate || date);
-                      setShow(false);
+                      setShow(false); // Close picker
                     }}
                   />
                 )}
