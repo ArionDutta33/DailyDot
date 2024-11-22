@@ -50,17 +50,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
-//  {
-//    /* <PieChart
-//             donut
-//             innerRadius={110}
-//             animationDuration={1000}
-//             isAnimated
-//             innerCircleColor="rgb(39,38,38)]"
-//             data={pieData}
-//             centerLabelComponent={() => {
-//               return <Text style={{ fontSize: 30, color: 'white' }}>70%</Text>;
-//             }}
-//           /> */
-//  }
