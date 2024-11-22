@@ -54,6 +54,7 @@ export default function Profile() {
     <>
       <Stack.Screen
         options={{
+          headerShadowVisible: false,
           title: 'Productivity',
           headerStyle: { backgroundColor: 'rgb(39,39,39)' },
           headerTintColor: 'white',
