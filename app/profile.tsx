@@ -1,52 +1,71 @@
-import { Redirect, Stack } from 'expo-router';
-import React from 'react';
-import { View, Text, Pressable } from 'react-native';
-import { BarChart, LineChart, PieChart, PopulationPyramid } from 'react-native-gifted-charts';
+import { Stack } from 'expo-router';
+import * as React from 'react';
+import { View, useWindowDimensions, Text } from 'react-native';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
-import { useAuth } from '~/provider/AuthProvider';
-import { supabase } from '~/utils/supabase';
+import DailyScreen from '~/components/customComponents/DailyScreen';
+import WeeklyScreen from '~/components/customComponents/WeeklyScreen';
 
-const Profile = () => {
-  const { isAuthenticated, user } = useAuth();
+const FirstRoute = () => <DailyScreen />;
 
-  // const fetchCompletedTasks = async () => {
-  //   const { data: todos, error } = await supabase
-  //     .from('todos')
-  //     .where('completed', 'eq', true)
-  //     .select('*');
-  //   return todos;
-  // };
+const SecondRoute = () => <WeeklyScreen />;
 
-  const pieData = [
-    { value: 70, color: 'crimson' },
+const renderScene = SceneMap({
+  daily: FirstRoute,
+  weekly: SecondRoute,
+});
 
-    { value: 30, color: 'gray' },
-  ];
+const renderTabBar = (props) => (
+  <TabBar
+    {...props}
+    activeColor="crimson"
+    style={{
+      backgroundColor: 'rgb(39,39,39)', // TabBar background color
+    }}
+    contentContainerStyle={{
+      borderBottomWidth: 1, // Border bottom on TabBar
+      borderBottomColor: 'rgb(39,39,39)', // Border color
+    }}
+    tabStyle={{
+      borderBottomWidth: 2, // Add border bottom only to tabs
+      borderBottomColor: 'transparent', // Default to transparent
+    }}
+    indicatorStyle={{
+      backgroundColor: 'crimson', // Indicator color
+      height: 2, // Indicator thickness
+    }}
+    labelStyle={{
+      color: 'white', // Tab label color
+      fontWeight: 'bold',
+    }}
+  />
+);
 
-  if (!isAuthenticated) {
-    return <Redirect href="/(auth)/login" />;
-  }
+const routes = [
+  { key: 'daily', title: 'Daily' },
+  { key: 'weekly', title: 'Weekly' },
+];
+
+export default function Profile() {
+  const layout = useWindowDimensions();
+  const [index, setIndex] = React.useState(0);
+
   return (
     <>
       <Stack.Screen
         options={{
-          title: 'Profile',
-          headerStyle: {
-            backgroundColor: 'rgb(39,38,38)',
-          },
-          headerShadowVisible: false,
+          title: 'Productivity',
+          headerStyle: { backgroundColor: 'rgb(39,39,39)' },
           headerTintColor: 'white',
-          statusBarBackgroundColor: 'crimson',
         }}
       />
-      <View className="flex-1 bg-[rgb(39,38,38)]  px-4">
-        <View className=" gap-1 border border-gray-500 py-6  ">
-          <Text className="text-white ">{user?.email}</Text>
-          <Text className="text-lg font-medium text-[crimson]">18 tasks completed</Text>
-        </View>
-      </View>
+      <TabView
+        renderTabBar={renderTabBar} // Use the custom TabBar
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={{ width: layout.width }}
+      />
     </>
   );
-};
-
-export default Profile;
+}
