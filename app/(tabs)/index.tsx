@@ -6,6 +6,8 @@ import BottomSheet, {
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Tabs } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import moment from 'moment';
 import React, { useCallback, useRef, useMemo, useState, useEffect } from 'react';
 import {
@@ -43,6 +45,11 @@ const Home = () => {
   const [error, setError] = useState('');
 
   const { user } = useAuth();
+
+  //*pull to refresh
+  const refreshTasks = async () => {
+    await getTodos();
+  };
 
   //*handle submit
   const handleOnSubmit = async () => {
@@ -116,6 +123,7 @@ const Home = () => {
   }
   return (
     <>
+      <StatusBar backgroundColor="crimson" />
       <GestureHandlerRootView>
         <View className="flex-1 bg-[rgb(39,38,38)] px-4">
           <View className="border-b border-gray-500 py-1">
@@ -127,6 +135,7 @@ const Home = () => {
           {todos.length > 0 ? (
             <FlatList
               showsVerticalScrollIndicator={false}
+              refreshing
               keyExtractor={(item) => item.id}
               data={todos}
               renderItem={({ item }) => <TaskItemBox todos={item} />}

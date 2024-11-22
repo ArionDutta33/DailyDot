@@ -37,10 +37,14 @@ export default function TabLayout() {
             fontWeight: 'light',
           },
           headerTintColor: 'white',
+
           headerStyle: {
             backgroundColor: 'rgb(39, 38, 38)',
           },
           tabBarIcon: ({ color }) => <TabBarIcon size={18} name="calendar" color={color} />,
+          tabBarStyle: {
+            backgroundColor: 'rgb(39, 38, 38)',
+          },
           headerRight: () => (
             <Link href="/profile" asChild>
               <HeaderButton />
