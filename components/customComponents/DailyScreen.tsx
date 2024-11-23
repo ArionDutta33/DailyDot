@@ -19,8 +19,10 @@ const DailyScreen = () => {
         <View>
           <PieChart
             donut
-            innerRadius={80}
+            backgroundColor="rgb(39,39,39)"
+            innerRadius={50}
             data={pieData}
+            radius={60}
             centerLabelComponent={() => {
               return <Text style={{ fontSize: 30 }}>70%</Text>;
             }}
