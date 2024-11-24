@@ -1,77 +1,83 @@
-import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
-import React, { useCallback, useRef, useMemo } from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import React, { useEffect, useState } from 'react';
+import { View, Text, ScrollView } from 'react-native';
+import { BarChart } from 'react-native-gifted-charts';
 
-const Search = () => {
-  // hooks
-  const sheetRef = useRef<BottomSheet>(null);
+import { useAuth } from '~/provider/AuthProvider';
+import { supabase } from '~/utils/supabase';
 
-  // variables
-  const data = useMemo(
-    () =>
-      Array(50)
-        .fill(0)
-        .map((_, index) => `index-${index}`),
-    []
-  );
-  const snapPoints = useMemo(() => ['25%', '50%', '90%'], []);
+const DailyScreen = () => {
+  const [barData, setBarData] = useState([]);
+  const [taskSummary, setTaskSummary] = useState([]);
+  const { user } = useAuth();
 
-  // callbacks
-  const handleSheetChange = useCallback((index) => {
-    console.log('handleSheetChange', index);
-  }, []);
-  const handleSnapPress = useCallback((index) => {
-    sheetRef.current?.snapToIndex(index);
-  }, []);
-  const handleClosePress = useCallback(() => {
-    sheetRef.current?.close();
-  }, []);
+  const fetchCompletedTasks = async () => {
+    try {
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - 7); // Filter for the last 7 days
 
-  // render
-  const renderItem = useCallback(
-    ({ item }) => (
-      <View style={styles.itemContainer}>
-        <Text>{item}</Text>
-      </View>
-    ),
-    []
-  );
+      const { data, error } = await supabase
+        .from('todos')
+        .select('created_at')
+        .eq('user_id', user?.id)
+        .eq('is_completed', true)
+        .gte('created_at', startDate.toISOString()); // Get tasks from the last 7 days
+
+      if (error) throw error;
+
+      const grouped = {};
+
+      // Group tasks by day
+      data.forEach((task) => {
+        const date = new Date(task.created_at).toISOString().split('T')[0]; // Extract date
+        grouped[date] = (grouped[date] || 0) + 1;
+      });
+
+      // Convert grouped data into chart format
+      const chartData = Object.entries(grouped)
+        .sort(([dateA], [dateB]) => new Date(dateA) - new Date(dateB)) // Sort by date
+        .map(([date, count]) => ({
+          label: new Date(date).toLocaleDateString('en-US', { weekday: 'short' }), // Weekday as label
+          value: count,
+          date, // Keep original date for reference
+        }));
+
+      setBarData(chartData);
+      setTaskSummary(chartData);
+    } catch (err) {
+      console.error('Error fetching completed tasks:', err);
+    }
+  };
+
+  useEffect(() => {
+    if (user?.id) fetchCompletedTasks();
+  }, [user]);
+
   return (
-    <GestureHandlerRootView style={styles.container}>
-      <Button title="Snap To 90%" onPress={() => handleSnapPress(2)} />
-      <Button title="Snap To 50%" onPress={() => handleSnapPress(1)} />
-      <Button title="Snap To 25%" onPress={() => handleSnapPress(0)} />
-      <Button title="Close" onPress={() => handleClosePress()} />
-      <BottomSheet
-        ref={sheetRef}
-        snapPoints={snapPoints}
-        enableDynamicSizing={false}
-        onChange={handleSheetChange}>
-        <BottomSheetFlatList
-          data={data}
-          keyExtractor={(i) => i}
-          renderItem={renderItem}
-          contentContainerStyle={styles.contentContainer}
-        />
-      </BottomSheet>
-    </GestureHandlerRootView>
+    <ScrollView className="flex-1 bg-[rgb(39,39,39)] px-6">
+      <Text className="mt-6 text-center text-lg text-white">Tasks Completed (Last 7 Days)</Text>
+
+      <BarChart
+        data={barData}
+        barWidth={22}
+        barBorderRadius={4}
+        frontColor="crimson"
+        yAxisThickness={0}
+        xAxisThickness={0}
+      />
+
+      <View className="mt-6">
+        <Text className="text-lg text-white">Daily Task Breakdown:</Text>
+        {taskSummary.map((task) => (
+          <View key={task.date} className="mt-2 flex-row justify-between">
+            <Text className="text-gray-300">
+              {task.label} ({task.date})
+            </Text>
+            <Text className="text-white">{task.value} tasks</Text>
+          </View>
+        ))}
+      </View>
+    </ScrollView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 200,
-  },
-  contentContainer: {
-    backgroundColor: 'white',
-  },
-  itemContainer: {
-    padding: 6,
-    margin: 6,
-    backgroundColor: '#eee',
-  },
-});
-
-export default Search;
+export default DailyScreen;
